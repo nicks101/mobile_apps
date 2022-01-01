@@ -12,11 +12,20 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.textfield.TextInputLayout
 
-private lateinit var binding: ActivityLoginBinding // 1
-
 class LoginActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityLoginBinding
+    private val preferences: BlogPreferences by lazy {
+        BlogPreferences(this)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (preferences.isLoggedIn()) {
+            startMainActivity()
+            finish()
+            return
+        }
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -60,6 +69,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun performLogin() {
+        preferences.setLoggedIn(true)
         binding.textUsernameLayout.isEnabled = false
         binding.textPasswordInput.isEnabled = false
         binding.loginButton.visibility = View.INVISIBLE
