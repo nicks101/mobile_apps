@@ -1,5 +1,6 @@
 package com.goel.travelblog
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import com.goel.travelblog.databinding.ActivityMainBinding
 import android.os.Bundle
@@ -12,5 +13,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.mainTextView.text = "Hello educative.io"
+
+        startActivity(Intent(this, BlogDetailsActivity::class.java))
     }
 }
