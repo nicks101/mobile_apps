@@ -11,6 +11,8 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import com.goel.cameraintegration.databinding.ActivityMainBinding
 import java.io.File
@@ -41,7 +43,7 @@ class MainActivity : AppCompatActivity() {
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider)
 
             try {
-                startActivityForResult(takePictureIntent, REQUEST_CODE)
+                getImageResult.launch(takePictureIntent)
             } catch (e: ActivityNotFoundException) {
                 Log.i(TAG, e.toString())
                 Toast.makeText(this, "Unable to open camera", Toast.LENGTH_SHORT).show()
@@ -55,14 +57,13 @@ class MainActivity : AppCompatActivity() {
         return File.createTempFile(fileName, ".jpg", storageDirectory)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            val takenImage = BitmapFactory.decodeFile(photoFile.absolutePath)
-            binding.imageView.setImageBitmap(takenImage)
-        } else {
-            Log.i(TAG, resultCode.toString())
-            super.onActivityResult(requestCode, resultCode, data)
+    private val getImageResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                val takenImage = BitmapFactory.decodeFile(photoFile.absolutePath)
+                binding.imageView.setImageBitmap(takenImage)
+            } else {
+                Log.i(TAG, it.resultCode.toString())
+            }
         }
-
-    }
 }
