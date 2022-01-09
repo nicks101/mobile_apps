@@ -16,7 +16,9 @@
 
 - Pull to refresh using SwipeRefreshLayout
 
-- Toolbar menu to sort the list data
+- Toolbar menu with two actions
+    - sort the list data by date or title
+    - search the list data by user input query
 
 ### References
 

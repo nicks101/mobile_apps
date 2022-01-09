@@ -32,6 +32,17 @@ class MainAdapter(private val onItemClickListener: (Blog) -> Unit) :
     fun sortByDate() {
         submitList(currentList.sortedBy { blog -> blog.getDateMillis() })
     }
+
+    private var originalList: List<Blog> = ArrayList()
+
+    fun setData(list: List<Blog>) {
+        originalList = list
+        super.submitList(list)
+    }
+
+    fun filter(query: String) {
+        submitList(originalList.filter { blog -> blog.title.contains(query, ignoreCase = true) })
+    }
 }
 
 class MainViewHolder(

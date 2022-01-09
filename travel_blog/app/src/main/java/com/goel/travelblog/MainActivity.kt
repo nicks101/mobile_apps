@@ -3,6 +3,7 @@ package com.goel.travelblog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.goel.travelblog.adapter.MainAdapter
 import com.goel.travelblog.databinding.ActivityMainBinding
@@ -30,19 +31,34 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        binding.recyclerView.adapter = adapter
-
-        binding.refresh.setOnRefreshListener {
-            loadData()
-        }
-
         binding.materialToolbar.setOnMenuItemClickListener { item ->
             if (item.itemId == R.id.sort) {
                 Log.i("MainActivity", "clicked on sort")
                 onSortClicked()
             }
             false
+        }
+
+        val searchItem = binding.materialToolbar.menu.findItem(R.id.search)
+        val searchView = searchItem.actionView as SearchView
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText == null) return false
+                adapter.filter(newText)
+                return true
+            }
+
+        })
+
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.adapter = adapter
+
+        binding.refresh.setOnRefreshListener {
+            loadData()
         }
 
         loadData()
@@ -73,7 +89,8 @@ class MainActivity : AppCompatActivity() {
             onSuccess = { blogList: List<Blog> ->
                 runOnUiThread {
                     binding.refresh.isRefreshing = false
-                    adapter.submitList(blogList)
+                    adapter.setData(blogList)
+                    sortData()
                 }
             },
             onError = {
