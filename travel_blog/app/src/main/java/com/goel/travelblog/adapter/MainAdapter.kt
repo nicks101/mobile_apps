@@ -24,6 +24,14 @@ class MainAdapter(private val onItemClickListener: (Blog) -> Unit) :
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
         holder.bindTo(getItem(position))
     }
+
+    fun sortByTitle() {
+        submitList(currentList.sortedBy { blog -> blog.title })
+    }
+
+    fun sortByDate() {
+        submitList(currentList.sortedBy { blog -> blog.getDateMillis() })
+    }
 }
 
 class MainViewHolder(

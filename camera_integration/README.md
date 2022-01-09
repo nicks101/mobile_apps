@@ -4,7 +4,7 @@
 
 - Integrate Android default camera
 
-- Using File Provider to recieve image for good image quality
+- Using File Provider to receive image for good image quality
 
 - Using registerForActivityResult instead of startActivityForResult for Intent
 

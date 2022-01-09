@@ -16,6 +16,7 @@
 
 - Pull to refresh using SwipeRefreshLayout
 
+- Toolbar menu to sort the list data
 
 ### References
 
