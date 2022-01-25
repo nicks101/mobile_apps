@@ -42,6 +42,6 @@
 
 ### TODO
 
-- [] Add Dark Theme support.  
+- [ ] Add Dark Theme support.  
 Currently app only works if system is in light mode.
 By changing the system app theme from light mode to dark (or any other) the data is not displayed.
