@@ -1,6 +1,9 @@
 package com.goel.travelblog.http
 
 import android.os.Parcelable
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 import java.text.SimpleDateFormat
 
@@ -8,9 +11,12 @@ private val dateFormat = SimpleDateFormat("MMMM dd, yyyy")
 
 data class BlogData(val data: List<Blog>)
 
+@Entity
 @Parcelize
 data class Blog(
+    @PrimaryKey
     val id: String,
+    @Embedded
     var author: Author,
     val title: String,
     val date: String,

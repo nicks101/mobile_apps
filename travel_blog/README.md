@@ -18,7 +18,9 @@
 
 - Toolbar menu with two actions
     - sort the list data by date or title
-    - search the list data by user input query
+    - filter the list data by user input query
+
+- Offline support using SQLite with Room library
 
 ### References
 
@@ -33,3 +35,5 @@
 - [Gson docs](https://github.com/google/gson)
 
 - [Article](https://guides.codepath.com/android/implementing-pull-to-refresh-guide) from CodePath
+
+- [Article](https://developer.android.com/training/data-storage/room) from Android docs.
