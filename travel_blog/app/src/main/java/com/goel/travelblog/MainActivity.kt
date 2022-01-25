@@ -9,16 +9,20 @@ import com.goel.travelblog.adapter.MainAdapter
 import com.goel.travelblog.databinding.ActivityMainBinding
 import com.goel.travelblog.http.Blog
 import com.goel.travelblog.http.BlogHttpClient
+import com.goel.travelblog.repository.BlogRepository
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
 
+    // [companion object] is a singleton. Here it's used to serve its members as static members
     companion object {
         private const val SORT_TITLE = 0
         private const val SORT_DATE = 1
     }
 
+    // [lazy] is a delegate that returns the result lazily and remembers it for next calls.
+    private val repository by lazy { BlogRepository(applicationContext) }
     private lateinit var binding: ActivityMainBinding
     private val adapter = MainAdapter { blog ->
         BlogDetailsActivity.start(this, blog)
@@ -51,17 +55,45 @@ class MainActivity : AppCompatActivity() {
                 adapter.filter(newText)
                 return true
             }
-
         })
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = adapter
 
         binding.refresh.setOnRefreshListener {
-            loadData()
+            loadDataFromNetwork()
         }
 
-        loadData()
+        loadDataFromDatabase()
+        loadDataFromNetwork()
+    }
+
+    private fun loadDataFromDatabase() {
+        repository.loadFromDatabase { blogList: List<Blog> ->
+            runOnUiThread {
+                adapter.setData(blogList)
+                sortData()
+            }
+        }
+    }
+
+    private fun loadDataFromNetwork() {
+        binding.refresh.isRefreshing = true
+        repository.loadFromNetwork(
+            onSuccess = { blogList: List<Blog> ->
+                runOnUiThread {
+                    binding.refresh.isRefreshing = false
+                    adapter.setData(blogList)
+                    sortData()
+                }
+            },
+            onError = {
+                runOnUiThread {
+                    binding.refresh.isRefreshing = false
+                    showErrorSnackbar()
+                }
+            }
+        )
     }
 
     private fun onSortClicked() {
@@ -83,24 +115,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadData() {
-        binding.refresh.isRefreshing = true
-        BlogHttpClient.loadBlogArticles(
-            onSuccess = { blogList: List<Blog> ->
-                runOnUiThread {
-                    binding.refresh.isRefreshing = false
-                    adapter.setData(blogList)
-                    sortData()
-                }
-            },
-            onError = {
-                runOnUiThread {
-                    binding.refresh.isRefreshing = false
-                    showErrorSnackbar()
-                }
-            }
-        )
-    }
 
     private fun showErrorSnackbar() {
         Snackbar.make(
@@ -109,7 +123,7 @@ class MainActivity : AppCompatActivity() {
         ).run {
             setActionTextColor(resources.getColor(R.color.orange500))
             setAction("Retry") {
-                loadData()
+                loadDataFromNetwork()
                 dismiss()
             }
         }.show()

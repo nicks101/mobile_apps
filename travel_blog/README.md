@@ -34,6 +34,14 @@
 
 - [Gson docs](https://github.com/google/gson)
 
-- [Article](https://guides.codepath.com/android/implementing-pull-to-refresh-guide) from CodePath
+- [Pull to Refresh Article](https://guides.codepath.com/android/implementing-pull-to-refresh-guide) from CodePath
 
-- [Article](https://developer.android.com/training/data-storage/room) from Android docs.
+- [Room Database Article](https://developer.android.com/training/data-storage/room) from Android docs.
+
+- [Companion Object Article](https://blog.mindorks.com/companion-object-in-kotlin) from MindOrks
+
+### TODO
+
+- [] Add Dark Theme support.  
+Currently app only works if system is in light mode.
+By changing the system app theme from light mode to dark (or any other) the data is not displayed.

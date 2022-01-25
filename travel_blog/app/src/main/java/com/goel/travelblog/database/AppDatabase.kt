@@ -6,5 +6,5 @@ import com.goel.travelblog.http.Blog
 
 @Database(entities = [Blog::class], version = 1)
 abstract class AppDatabase : RoomDatabase(){
-    abstract fun blogDOA(): BlogDOA
+    abstract fun blogDoa(): BlogDOA
 }
